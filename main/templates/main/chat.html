@@ -1,0 +1,127 @@
+{%extends 'main/base.html'%}
+
+{%block content%}
+<style>
+    #chat {
+        height: 500px;
+        max-height: 500px;
+        overflow-y: scroll;
+    }
+</style>
+<div class="container-fluid row d-flex justify-content-center mt-5">
+    <div class="col-lg-6 col-sm-12 col-md-10 border border-dark row d-flex mb-5">
+        <div id="chat" class="col-12 row border border-dark mt-2">
+                        <h4 class="col-12 mt-2 mb-5"><strong id="creator-first-line">Say "hi" to this nigga</strong></h4>
+            <HR>
+        </div>
+        <input type="text" id="message" name="message" class="col-8 border border-dark m-2">
+
+
+        <button id="test" class="ml-auto col-3 btn btn-primary">Send</button>
+
+    </div>
+
+</div>
+
+<script>
+    /*
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+    */
+
+        /* ***********************************   FUNCTIONS ************************************************ */
+
+
+
+    function send_message() {
+        var url = "{%url 'send-message' %}";
+        if ($('#message').val()) {
+            var myData = {
+                message: $('#message').val(),
+                name: "{{pair_name}}"
+            }
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: myData,
+                success: function (mesaj) {
+                        $('#chat').append('<h5 class="col-12"> <strong>{{pair_name}}: </strong> </h5>');
+                        $('#chat').append('<h5 class="col-12">'+mesaj+'</h5>')
+                        $('#message').val('');
+          
+                },
+            });
+        }
+    };
+
+        function get_message() {
+            var url = "{%url 'send-message'%}";
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: { name: "{{pair_name}}" },
+                success: function (mesaj) {
+                        console.log(mesaj)
+                        if (String(mesaj) != "qqqquuuu^fwh&fg*ewg(*$@gmdsognds*&(^$#gbyrowiguyb" && String(mesaj) != "mortiiteiboro") {
+                            $('#chat').append('<h5 class="ml-auto"> <strong>{{creator_name}}: </strong></h5>') 
+                            $('#chat').append('<div class="col-12"></div>');
+                            $('#chat').append('<h5 class="ml-auto">'+mesaj+'</h5>');
+                            $('#chat').append('<div class="col-12"></div>');
+                            }
+                        else {
+                            if(String(mesaj) =="mortiiteiboro"){
+                                alert("creator has left");
+                                window.location = "{%url 'chat-list'%}";
+                            };
+                        }
+                        },
+            });
+        };
+        
+
+        /* ***********************************   CALLS ************************************************ */
+
+    
+    setInterval(function () { get_message(); }, 100);
+
+    $(function () {
+        $('#test').on('click', send_message)
+    });
+    $('#message').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            send_message();
+        }
+    });
+
+    $(window).on('unload',
+        function () {
+            var url = "{%url 'send-message' %}";
+            $.ajax({
+                url:url,
+                type: "POST",
+                data: {name : "{{pair_name}}",
+                        message : "mortiiteiboro"
+                    },
+                async: false
+            })
+    });
+
+</script>
+{%endblock%}

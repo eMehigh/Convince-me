@@ -1,0 +1,84 @@
+{% extends "main/base.html" %}
+
+{%block content%}
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+
+<script>
+
+    var name_is_set = false;
+    $(function(){
+        $('#name-set').on('click', function () {
+            if($('#input-text').val().length >= 3){
+                $('#input-text').focus(function(){
+                    name_is_set = $('#input-text').val();
+                    $(this).blur().addClass('border border-success');
+                });
+                $('#name-set').replaceWith(function(){
+                    return '<p class="mt-4 ml-5"><i class="fas fa-check-circle"></i></p>'
+                });
+            }
+            else{
+                alert('Your name should be at least 3 character long!');
+                $('#name-form').submit(function(e){
+                    e.preventDefault();
+                });
+            }
+        });
+    });
+    $(function(){
+        $('#submit-button').click(function(){
+            if(name_is_set){
+            $('#name-form').submit();
+            }
+            else{
+                  alert('Please provide name nigga!');
+                $('#name-form').submit(function (e) {
+                    e.preventDefault();
+                });
+            }
+        });
+    });
+
+</script>
+
+{% if messages %}
+    {% for message in messages %}
+<div class="alert alert-warning" role="alert">
+        {{ message }}
+</div>
+    {% endfor %}
+{% endif %}
+
+
+<div class="container-fluid row d-flex justify-content-center mt-5">
+    <div class="col-12 row d-flex justify-content-center mt-5">
+        <div class="col-12 row d-flex justify-content-center mt-5"> 
+           <h3> Enter your name here!</h3></h3>
+        </div>
+        <form method="POST" action="{%url 'index' %}" id="name-form" class="col-4 row d-flex justify-content-center mt-5">
+             {%csrf_token%}
+            <input type="text" name="name" class="col-lg-6 col-sm-8 col-md-8" id="input-text">
+            <button id="name-set" class="btn btn-primary col-5 col-sm-8 col-md-8">Set name</button>
+        </form>
+    </div>
+    <div class="col-12 row d-flex justify-content-center mt-5">
+        <h2><strong>Welcome to the app that will put you touch with random people!</strong></h2>
+    </div>
+    <div class="col-12 mt-5"></div>
+    <div class="col-4 row d-flex justify-content-center mt-5">
+      <button id="submit-button" type="submit" class='btn btn-primary'>Create Room</button>
+    </div>
+
+    <div class="col-4   row d-flex justify-content-center mt-5">
+        <a href="{%url 'chat-list'%}"><button class="btn btn-primary">Join Chat</button></a>
+    </div>
+    <div class="col-12 mt-5"></div>
+    <div class="col-12 row d-flex justify-content-center mt-5">
+        <h5 class="text-muted">We are not responsable for any of your eventual damage</h5>
+    </div>
+    <div class="col-12 mt-5"></div>
+
+</div>
+
+{%endblock%}
