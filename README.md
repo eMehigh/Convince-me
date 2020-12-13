@@ -1,2 +1,2 @@
 # Convince-me
-Chat app
+Chat app "convince-me"
